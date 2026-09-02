@@ -1,0 +1,85 @@
+name: Bump
+
+on:
+  repository_dispatch:
+    types: [acolyte-release]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to pin, e.g. v0.27.0
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bump-acolyte
+  cancel-in-progress: false
+
+env:
+  TAG: ${{ github.event.client_payload.ref || inputs.tag }}
+
+jobs:
+  verify:
+    name: Verify (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      # setup-homebrew replaces the workspace with this repository as the tap, so the rewrite
+      # below is what `brew` resolves by name — the release is audited before anything lands.
+      - name: Setup Homebrew
+        uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c
+
+      - name: Fetch checksums
+        run: |
+          : "${TAG:?a release tag is required}"
+          curl -fsSL -o "$RUNNER_TEMP/SHA256SUMS.txt" \
+            "https://github.com/cniska/acolyte/releases/download/$TAG/SHA256SUMS.txt"
+
+      - name: Repin formula
+        run: python3 scripts/bump-formula.py Formula/acolyte.rb "$RUNNER_TEMP/SHA256SUMS.txt" "$TAG"
+
+      - name: Audit
+        run: brew audit --strict --formula cniska/tap/acolyte
+
+      - name: Install
+        run: brew install cniska/tap/acolyte
+
+      - name: Test
+        run: brew test cniska/tap/acolyte
+
+  push:
+    name: Push Formula
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch checksums
+        run: |
+          : "${TAG:?a release tag is required}"
+          curl -fsSL -o "$RUNNER_TEMP/SHA256SUMS.txt" \
+            "https://github.com/cniska/acolyte/releases/download/$TAG/SHA256SUMS.txt"
+
+      - name: Repin formula
+        run: python3 scripts/bump-formula.py Formula/acolyte.rb "$RUNNER_TEMP/SHA256SUMS.txt" "$TAG"
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet; then
+            echo "the formula already pins $TAG"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "chore(formula): bump acolyte to ${TAG#v}"
+          git push origin HEAD:main
