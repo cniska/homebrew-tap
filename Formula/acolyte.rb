@@ -1,7 +1,6 @@
 class Acolyte < Formula
   desc "Terminal-first AI coding agent with an inspectable runtime"
   homepage "https://acolyte.sh"
-  version "0.27.0"
   license "MIT"
 
   livecheck do
@@ -51,6 +50,6 @@ class Acolyte < Formula
     staged.mkpath
     (staged/"acolyte").write "#!/bin/sh\necho staged\n"
     chmod 0755, staged/"acolyte"
-    assert_equal "staged", shell_output("#{bin}/acolyte").chomp
+    assert_equal "staged", shell_output(bin/"acolyte").chomp
   end
 end
