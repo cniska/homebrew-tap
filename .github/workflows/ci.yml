@@ -1,0 +1,44 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  formula:
+    name: Formula (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Homebrew
+        uses: Homebrew/actions/setup-homebrew@master
+
+      # Tap the checkout rather than the published repository, so a pull request
+      # is tested as proposed instead of as already merged.
+      - name: Tap this checkout
+        run: brew tap cniska/tap "$PWD"
+
+      - name: Audit
+        run: brew audit --strict --formula cniska/tap/acolyte
+
+      - name: Install
+        run: brew install cniska/tap/acolyte
+
+      - name: Test
+        run: brew test cniska/tap/acolyte
