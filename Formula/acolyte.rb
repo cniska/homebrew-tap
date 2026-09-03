@@ -10,15 +10,15 @@ class Acolyte < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/acolyte/releases/download/v0.27.0/acolyte-darwin-arm64.tar.gz"
-      sha256 "425e21893b91a5081ef82aed694da1ccabe1f5f8e7612fe89c68789ebfb43b4b"
+      url "https://github.com/cniska/acolyte/releases/download/v0.27.1/acolyte-darwin-arm64.tar.gz"
+      sha256 "47ffb49d66aa94b83ae4e91233505bd08549fc0709add2c0443d6d565eb81f71"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/acolyte/releases/download/v0.27.0/acolyte-linux-x64.tar.gz"
-      sha256 "bf04503387cb208fd9040814be7f7e8cfa9abcc75cad87aa27e09a9122547685"
+      url "https://github.com/cniska/acolyte/releases/download/v0.27.1/acolyte-linux-x64.tar.gz"
+      sha256 "72ab40ea0a3876ad3236052d73ff2c696650af79f8f83712aa61c380627b7d84"
     end
   end
 
@@ -26,8 +26,8 @@ class Acolyte < Formula
   # directory, so a self-update never writes into the Cellar and `brew upgrade` wins whenever
   # it is ahead.
   resource "launcher" do
-    url "https://github.com/cniska/acolyte/releases/download/v0.27.0/launcher.sh"
-    sha256 "f52834d87bddaa37fb458b58e0cde6385b6a79ba09f9fd612d37a23450da9196"
+    url "https://github.com/cniska/acolyte/releases/download/v0.27.1/launcher.sh"
+    sha256 "3ba729636156792df70c47e58c4ec4f667347fa9b71167f80b9049283261634d"
   end
 
   def install
