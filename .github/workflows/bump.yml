@@ -2,9 +2,12 @@ name: Bump
 
 on:
   repository_dispatch:
-    types: [acolyte-release]
+    types: [acolyte-release, formula-release]
   workflow_dispatch:
     inputs:
+      formula:
+        description: Formula to repin, named as its cniska repository, e.g. acolyte
+        required: true
       tag:
         description: Release tag to pin, e.g. v0.27.0
         required: true
@@ -13,15 +16,38 @@ permissions:
   contents: write
 
 concurrency:
-  group: bump-acolyte
+  group: bump-${{ github.event.action == 'acolyte-release' && 'acolyte' || github.event.client_payload.formula || inputs.formula }}
   cancel-in-progress: false
 
-env:
-  TAG: ${{ github.event.client_payload.ref || inputs.tag }}
-
 jobs:
+  resolve:
+    name: Resolve Release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    outputs:
+      formula: ${{ steps.release.outputs.formula }}
+      tag: ${{ steps.release.outputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Check the formula and tag
+        id: release
+        env:
+          FORMULA: ${{ github.event.action == 'acolyte-release' && 'acolyte' || github.event.client_payload.formula || inputs.formula }}
+          TAG: ${{ github.event.client_payload.ref || inputs.tag }}
+        run: |
+          [[ "$FORMULA" =~ ^[a-z0-9][a-z0-9-]*$ ]] || { echo "not a formula name: '$FORMULA'"; exit 1; }
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo "not a release tag: '$TAG'"; exit 1; }
+          [[ -f "Formula/$FORMULA.rb" ]] || { echo "this tap has no Formula/$FORMULA.rb"; exit 1; }
+          echo "formula=$FORMULA" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
   verify:
     name: Verify (${{ matrix.os }})
+    needs: resolve
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
 
@@ -29,6 +55,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [macos-latest, ubuntu-latest]
+
+    env:
+      FORMULA: ${{ needs.resolve.outputs.formula }}
+      TAG: ${{ needs.resolve.outputs.tag }}
 
     steps:
       # setup-homebrew replaces the workspace with this repository as the tap, so the rewrite
@@ -38,27 +68,30 @@ jobs:
 
       - name: Fetch checksums
         run: |
-          : "${TAG:?a release tag is required}"
           curl -fsSL -o "$RUNNER_TEMP/SHA256SUMS.txt" \
-            "https://github.com/cniska/acolyte/releases/download/$TAG/SHA256SUMS.txt"
+            "https://github.com/cniska/$FORMULA/releases/download/$TAG/SHA256SUMS.txt"
 
       - name: Repin formula
-        run: python3 scripts/bump-formula.py Formula/acolyte.rb "$RUNNER_TEMP/SHA256SUMS.txt" "$TAG"
+        run: python3 scripts/bump-formula.py "Formula/$FORMULA.rb" "cniska/$FORMULA" "$RUNNER_TEMP/SHA256SUMS.txt" "$TAG"
 
       - name: Audit
-        run: brew audit --strict --formula cniska/tap/acolyte
+        run: brew audit --strict --formula "cniska/tap/$FORMULA"
 
       - name: Install
-        run: brew install cniska/tap/acolyte
+        run: brew install "cniska/tap/$FORMULA"
 
       - name: Test
-        run: brew test cniska/tap/acolyte
+        run: brew test "cniska/tap/$FORMULA"
 
   push:
     name: Push Formula
-    needs: verify
+    needs: [resolve, verify]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    env:
+      FORMULA: ${{ needs.resolve.outputs.formula }}
+      TAG: ${{ needs.resolve.outputs.tag }}
 
     steps:
       - name: Checkout
@@ -66,12 +99,11 @@ jobs:
 
       - name: Fetch checksums
         run: |
-          : "${TAG:?a release tag is required}"
           curl -fsSL -o "$RUNNER_TEMP/SHA256SUMS.txt" \
-            "https://github.com/cniska/acolyte/releases/download/$TAG/SHA256SUMS.txt"
+            "https://github.com/cniska/$FORMULA/releases/download/$TAG/SHA256SUMS.txt"
 
       - name: Repin formula
-        run: python3 scripts/bump-formula.py Formula/acolyte.rb "$RUNNER_TEMP/SHA256SUMS.txt" "$TAG"
+        run: python3 scripts/bump-formula.py "Formula/$FORMULA.rb" "cniska/$FORMULA" "$RUNNER_TEMP/SHA256SUMS.txt" "$TAG"
 
       - name: Commit and push
         run: |
@@ -81,5 +113,5 @@ jobs:
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -am "chore(formula): bump acolyte to ${TAG#v}"
+          git commit -am "chore(formula): bump $FORMULA to ${TAG#v}"
           git push origin HEAD:main

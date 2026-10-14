@@ -4,11 +4,14 @@
 import re
 import sys
 
-ASSET_PIN = re.compile(
-    r'url "https://github\.com/cniska/acolyte/releases/download/[^/"]+/(?P<asset>[^"]+)"\n'
-    r'(?P<indent>[ \t]*)sha256 "[0-9a-f]{64}"'
-)
-RELEASE_TAG = re.compile(r'releases/download/([^/"]+)/')
+RELEASE_URL = re.compile(r'https://github\.com/([^/"]+/[^/"]+)/releases/download/([^/"]+)/')
+
+
+def asset_pin(repo):
+    return re.compile(
+        rf'url "https://github\.com/{re.escape(repo)}/releases/download/[^/"]+/(?P<asset>[^"]+)"\n'
+        r'(?P<indent>[ \t]*)sha256 "[0-9a-f]{64}"'
+    )
 
 
 def read_digests(path):
@@ -20,32 +23,37 @@ def read_digests(path):
     return digests
 
 
-def repin(formula, tag, digests):
+def repin(formula, repo, tag, digests):
+    pinned = RELEASE_URL.findall(formula)
+    if not pinned:
+        raise SystemExit("the formula pins no release URLs")
+    others = sorted({pinned_repo for pinned_repo, _ in pinned} - {repo})
+    if others:
+        raise SystemExit(f"the formula pins releases of {others}, not {repo}")
+
     def pin(match):
         asset = match.group("asset")
         if asset not in digests:
             raise SystemExit(f"{asset} is missing from the checksum file")
         return (
-            f'url "https://github.com/cniska/acolyte/releases/download/{tag}/{asset}"\n'
+            f'url "https://github.com/{repo}/releases/download/{tag}/{asset}"\n'
             f'{match.group("indent")}sha256 "{digests[asset]}"'
         )
 
-    repinned = ASSET_PIN.sub(pin, formula)
+    repinned = asset_pin(repo).sub(pin, formula)
 
-    tags = set(RELEASE_TAG.findall(repinned))
-    if not tags:
-        raise SystemExit("the formula pins no release URLs")
+    tags = {pinned_tag for _, pinned_tag in RELEASE_URL.findall(repinned)}
     if tags != {tag}:
         raise SystemExit(f"the formula still pins {sorted(tags - {tag})} after the rewrite")
 
     return repinned
 
 
-def main(formula_path, sums_path, tag):
+def main(formula_path, repo, sums_path, tag):
     with open(formula_path) as formula:
         original = formula.read()
 
-    repinned = repin(original, tag, read_digests(sums_path))
+    repinned = repin(original, repo, tag, read_digests(sums_path))
     if repinned == original:
         return
 

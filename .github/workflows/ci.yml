@@ -22,15 +22,15 @@ jobs:
         os: [macos-latest, ubuntu-latest]
 
     steps:
-      # setup-homebrew taps this repository, so the formula is available by name.
+      # setup-homebrew taps this repository, so each formula in Formula/ is available by name.
       - name: Setup Homebrew
         uses: Homebrew/actions/setup-homebrew@1f8e202ffddf94def7f42f6fa3a482e821489f9c
 
-      - name: Audit
-        run: brew audit --strict --formula cniska/tap/acolyte
-
-      - name: Install
-        run: brew install cniska/tap/acolyte
-
-      - name: Test
-        run: brew test cniska/tap/acolyte
+      - name: Audit, install and test every formula
+        run: |
+          for path in Formula/*.rb; do
+            formula="cniska/tap/$(basename "$path" .rb)"
+            brew audit --strict --formula "$formula"
+            brew install "$formula"
+            brew test "$formula"
+          done
