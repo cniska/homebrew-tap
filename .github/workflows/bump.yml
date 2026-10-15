@@ -13,7 +13,7 @@ on:
         required: true
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: bump-${{ github.event.action == 'acolyte-release' && 'acolyte' || github.event.client_payload.formula || inputs.formula }}
@@ -88,6 +88,9 @@ jobs:
     needs: [resolve, verify]
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
+    permissions:
+      contents: write
 
     env:
       FORMULA: ${{ needs.resolve.outputs.formula }}
