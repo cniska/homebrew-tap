@@ -18,7 +18,7 @@ The installed command is a launcher that runs whichever is newer: this formula's
 
 ## agent-gates
 
-Git hooks and GitHub workflows that gate coding agents' commits — [cniska/agent-gates](https://github.com/cniska/agent-gates).
+Commit gates for coding agents: git hooks that refuse a bad commit locally, and CI workflows that judge the same — [cniska/agent-gates](https://github.com/cniska/agent-gates).
 
 ```bash
 brew install cniska/tap/agent-gates
@@ -28,7 +28,7 @@ The installed command is this formula's binary alone, with no self-update: `brew
 
 ## agent-record
 
-Every coding-agent session on this machine, kept verbatim and searchable — [cniska/agent-record](https://github.com/cniska/agent-record).
+Session record for coding agents: every past session on this machine, queryable and joined to its commits — [cniska/agent-record](https://github.com/cniska/agent-record).
 
 ```bash
 brew install cniska/tap/agent-record
@@ -38,7 +38,7 @@ The installed command is this formula's binary alone, with no self-update: `brew
 
 ## agent-worktree
 
-Task worktrees so coding agents working in parallel never share a checkout — [cniska/agent-worktree](https://github.com/cniska/agent-worktree).
+Task worktrees for coding agents: one checkout per task, set up and torn down by the project's own commands — [cniska/agent-worktree](https://github.com/cniska/agent-worktree).
 
 ```bash
 brew install cniska/tap/agent-worktree
