@@ -35,3 +35,13 @@ brew install cniska/tap/agent-record
 ```
 
 The installed command is this formula's binary alone, with no self-update: `brew upgrade agent-record` takes each release. See [Releasing](https://github.com/cniska/agent-record/blob/main/docs/releasing.md).
+
+## agent-worktree
+
+Task worktrees so coding agents working in parallel never share a checkout — [cniska/agent-worktree](https://github.com/cniska/agent-worktree).
+
+```bash
+brew install cniska/tap/agent-worktree
+```
+
+The installed command is this formula's binary alone, with no self-update: `brew upgrade agent-worktree` takes each release. See [Releasing](https://github.com/cniska/agent-worktree/blob/main/docs/releasing.md).
