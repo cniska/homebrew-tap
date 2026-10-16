@@ -11,14 +11,14 @@ class AgentWorktree < Formula
   on_macos do
     on_arm do
       url "https://github.com/cniska/agent-worktree/releases/download/v0.1.0/agent-worktree-darwin-arm64.tar.gz"
-      sha256 "3da4235e943d0087bdeddb81c4aa076c6893d11426c3f65d81d9a1f4ef40830a"
+      sha256 "0ec782a9c8deae34d1539c004d63f379eb8bec7e6803bef496c8ec56b6e3641e"
     end
   end
 
   on_linux do
     on_intel do
       url "https://github.com/cniska/agent-worktree/releases/download/v0.1.0/agent-worktree-linux-x64.tar.gz"
-      sha256 "afcfe74a1398d47cdf3a1453d4f480fbadea1c22e5185f0284881574fd08de02"
+      sha256 "f2674b775a23136f455deb127a6ef7c898564c996b542fabcb9d88375857c2e6"
     end
   end
 
