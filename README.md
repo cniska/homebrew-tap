@@ -34,4 +34,4 @@ Every coding-agent session on this machine, kept verbatim and searchable — [cn
 brew install cniska/tap/agent-record
 ```
 
-The installed command is a launcher that runs whichever is newer: this formula's binary, or a build agent-record staged in its data directory. A self-update never writes into the Cellar, and `brew upgrade` takes precedence whenever the formula is ahead. See [Releasing](https://github.com/cniska/agent-record/blob/main/docs/releasing.md).
+The installed command is this formula's binary alone, with no self-update: `brew upgrade agent-record` takes each release. See [Releasing](https://github.com/cniska/agent-record/blob/main/docs/releasing.md).
