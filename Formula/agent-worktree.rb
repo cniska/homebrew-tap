@@ -10,15 +10,15 @@ class AgentWorktree < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/agent-worktree/releases/download/v0.1.0/agent-worktree-darwin-arm64.tar.gz"
-      sha256 "0ec782a9c8deae34d1539c004d63f379eb8bec7e6803bef496c8ec56b6e3641e"
+      url "https://github.com/cniska/agent-worktree/releases/download/v0.2.0/agent-worktree-darwin-arm64.tar.gz"
+      sha256 "de08fe4291598055651c1c663f858c6afb8b56c3d8fda4e210840ef921f7f964"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/agent-worktree/releases/download/v0.1.0/agent-worktree-linux-x64.tar.gz"
-      sha256 "f2674b775a23136f455deb127a6ef7c898564c996b542fabcb9d88375857c2e6"
+      url "https://github.com/cniska/agent-worktree/releases/download/v0.2.0/agent-worktree-linux-x64.tar.gz"
+      sha256 "d0ed3426f464a5255685359fd371cc788002fe484d87e85d6383795a365e3dc0"
     end
   end
 
@@ -34,7 +34,7 @@ class AgentWorktree < Formula
     cd "project" do
       system "git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
              "commit", "-q", "--allow-empty", "-m", "made-up commit"
-      worktree = shell_output("#{bin}/agent-worktree create made-up-task").chomp
+      worktree = assert_match(/^  path: (.+)$/, shell_output("#{bin}/agent-worktree create made-up-task"))[1]
       assert_path_exists worktree
       system bin/"agent-worktree", "remove", "made-up-task"
       refute_path_exists worktree
