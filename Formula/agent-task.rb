@@ -10,15 +10,15 @@ class AgentTask < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/agent-task/releases/download/v0.1.0/agent-task-darwin-arm64.tar.gz"
-      sha256 "bc8cf04a922d133e345697f15527de23a906ceeeb9b841d0e6dcacca57702e06"
+      url "https://github.com/cniska/agent-task/releases/download/v0.2.0/agent-task-darwin-arm64.tar.gz"
+      sha256 "78dba53fcd4ad94481bfad841e7c0af784249d6e45492cff1ae72bfd30b20627"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/agent-task/releases/download/v0.1.0/agent-task-linux-x64.tar.gz"
-      sha256 "6d880e9c9f5ae155b151c2b670338c2f1f5277cb1bd8246be96a3165ed5a8d9a"
+      url "https://github.com/cniska/agent-task/releases/download/v0.2.0/agent-task-linux-x64.tar.gz"
+      sha256 "e1d5774329047d886eaf8fd8daeca71abf38476110e9d40ad0ac3f163d0bddd5"
     end
   end
 
@@ -33,10 +33,10 @@ class AgentTask < Formula
     system "git", "init", "-q", "repo"
     cd "repo" do
       (testpath/"repo/brief.md").write "# Made-up brief\n"
-      assert_match '"ok":true', shell_output("#{bin}/agent-task start made-up-task --repo . --brief brief.md")
-      assert_match '"name":"made-up-task"', shell_output("#{bin}/agent-task list")
-      assert_match '"ok":true', shell_output("#{bin}/agent-task done made-up-task")
-      assert_match '"failing":0', shell_output("#{bin}/agent-task doctor")
+      assert_match(/^ok: true$/, shell_output("#{bin}/agent-task start made-up-task --repo . --brief brief.md"))
+      assert_match(/^    made-up-task,running,/, shell_output("#{bin}/agent-task list"))
+      assert_match(/^ok: true$/, shell_output("#{bin}/agent-task done made-up-task"))
+      assert_match(/^    fail: 0$/, shell_output("#{bin}/agent-task doctor"))
     end
   end
 end
