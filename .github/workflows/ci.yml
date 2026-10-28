@@ -19,7 +19,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-latest]
+        os: ${{ fromJSON(github.event_name == 'workflow_dispatch' && '["macos-latest","ubuntu-latest"]' || '["ubuntu-latest"]') }}
 
     steps:
       # setup-homebrew taps this repository, so each formula in Formula/ is available by name.
