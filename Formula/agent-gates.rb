@@ -10,15 +10,15 @@ class AgentGates < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/agent-gates/releases/download/v0.5.0/agent-gates-darwin-arm64.tar.gz"
-      sha256 "77ce2aa183ed469f2b6ccbe944f41d7bd40eb3762acc5dcdde564f6a3fb030ab"
+      url "https://github.com/cniska/agent-gates/releases/download/v0.6.0/agent-gates-darwin-arm64.tar.gz"
+      sha256 "f4148a8132f9b3f290cdd0dc456fa32e113bf564436973df369c463e13bfa9dc"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/agent-gates/releases/download/v0.5.0/agent-gates-linux-x64.tar.gz"
-      sha256 "361ee63a34e539ffe6d4f2491edb79a1aca64289016450454d8016fc17dc8215"
+      url "https://github.com/cniska/agent-gates/releases/download/v0.6.0/agent-gates-linux-x64.tar.gz"
+      sha256 "f18ebb2fc94a0103e66d2b4975099fa036d376615e879f8cdb5a98cebf2d4d93"
     end
   end
 
