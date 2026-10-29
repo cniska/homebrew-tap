@@ -55,3 +55,13 @@ brew install cniska/tap/agent-task
 ```
 
 The installed command is this formula's binary alone, with no self-update: `brew upgrade agent-task` takes each release. See [Releasing](https://github.com/cniska/agent-task/blob/main/docs/releasing.md).
+
+## agent-ship
+
+Releases for coding agents: cut a release, wait for its CI, and confirm it reached every channel — [cniska/agent-ship](https://github.com/cniska/agent-ship).
+
+```bash
+brew install cniska/tap/agent-ship
+```
+
+The installed command is this formula's binary alone, with no self-update: `brew upgrade agent-ship` takes each release. See [Releasing](https://github.com/cniska/agent-ship/blob/main/docs/releasing.md).
