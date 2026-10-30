@@ -10,15 +10,15 @@ class AgentTask < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/agent-task/releases/download/v0.2.0/agent-task-darwin-arm64.tar.gz"
-      sha256 "78dba53fcd4ad94481bfad841e7c0af784249d6e45492cff1ae72bfd30b20627"
+      url "https://github.com/cniska/agent-task/releases/download/v0.2.1/agent-task-darwin-arm64.tar.gz"
+      sha256 "66d16e8acf2096a565793ce02a483bb18d8eed08f302edec7872856e78f34bf2"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/agent-task/releases/download/v0.2.0/agent-task-linux-x64.tar.gz"
-      sha256 "e1d5774329047d886eaf8fd8daeca71abf38476110e9d40ad0ac3f163d0bddd5"
+      url "https://github.com/cniska/agent-task/releases/download/v0.2.1/agent-task-linux-x64.tar.gz"
+      sha256 "5fa01301cd5a1af81ae6528527ddb93458c0a01c81676a166ee1b985fb163957"
     end
   end
 
