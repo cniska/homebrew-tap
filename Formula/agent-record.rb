@@ -10,15 +10,15 @@ class AgentRecord < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/agent-record/releases/download/v0.3.0/agent-record-darwin-arm64.tar.gz"
-      sha256 "2f31418f2dad111f668a86bf53d8a2261c9713f216ecfcb6fb9c0d96af2f6e74"
+      url "https://github.com/cniska/agent-record/releases/download/v0.4.0/agent-record-darwin-arm64.tar.gz"
+      sha256 "6a62b530881f9bb9d3329f8a1f266d3b2fa2f42f7632efeb6eb204776184e2b8"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/agent-record/releases/download/v0.3.0/agent-record-linux-x64.tar.gz"
-      sha256 "f25183ac2179687fc62f00d605f4a0a882c1966622f0e4006662dc45c1222a3e"
+      url "https://github.com/cniska/agent-record/releases/download/v0.4.0/agent-record-linux-x64.tar.gz"
+      sha256 "dda93033108f6ed44e6ffe3052d8958b85b8b9928552c31712272e1f13d99775"
     end
   end
 
