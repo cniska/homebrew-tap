@@ -34,7 +34,7 @@ class AgentTask < Formula
     cd "repo" do
       (testpath/"repo/brief.md").write "# Made-up brief\n"
       assert_match(/^ok: true$/, shell_output("#{bin}/agent-task start made-up-task --repo . --brief brief.md"))
-      assert_match(/^    made-up-task,running,/, shell_output("#{bin}/agent-task list"))
+      assert_match(/^    made-up-task,(null,)?running,/, shell_output("#{bin}/agent-task list"))
       assert_match(/^ok: true$/, shell_output("#{bin}/agent-task done made-up-task"))
       assert_match(/^    fail: 0$/, shell_output("#{bin}/agent-task doctor"))
     end
