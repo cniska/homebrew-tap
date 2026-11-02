@@ -10,15 +10,15 @@ class AgentShip < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/cniska/agent-ship/releases/download/v0.2.0/agent-ship-darwin-arm64.tar.gz"
-      sha256 "4df0f83431b574dfacdcc29a19214346e84b99aaefc33b4f09ffd7d63ae73f95"
+      url "https://github.com/cniska/agent-ship/releases/download/v0.3.0/agent-ship-darwin-arm64.tar.gz"
+      sha256 "1b55f41b33188885adb1227b329d16df1b01b3b4ff59b4a79a5e88fce7f79005"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/cniska/agent-ship/releases/download/v0.2.0/agent-ship-linux-x64.tar.gz"
-      sha256 "c653ae2dd969d2d76a7ed860627a894ea126c0535902df2fc1de359c70dde0b4"
+      url "https://github.com/cniska/agent-ship/releases/download/v0.3.0/agent-ship-linux-x64.tar.gz"
+      sha256 "b39de1773c1afe7a5fdf3787c2175fc44987429fa0c7dd6e8aee2fd97aa219a3"
     end
   end
 
