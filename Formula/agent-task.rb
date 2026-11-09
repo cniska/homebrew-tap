@@ -30,6 +30,8 @@ class AgentTask < Formula
     assert_equal version.to_s, shell_output("#{bin}/agent-task --version").chomp
 
     ENV["XDG_DATA_HOME"] = (testpath/"data").to_s
+    (testpath/"data/agent-task").mkpath
+    (testpath/"data/agent-task/limits.json").write '{"maxLoadPerCore": 1000000, "minAvailableMemory": 0}'
     system "git", "init", "-q", "repo"
     cd "repo" do
       (testpath/"repo/brief.md").write "# Made-up brief\n"
